@@ -1,0 +1,16 @@
+{
+    "autoplay": true,
+    "autoplaySpeed": 2.5,
+    "speed": 0.5,
+    "arrows": true,
+    "transition-type": "slide",
+    "constrain_height": true,
+    "image_vertical_align": "middle",
+    "image_horizontal_align": "middle",
+    "image_alignment": "image_middle_middle",
+    "mobile_data": {
+        "separate_mobile_view": false
+    },
+    "meta_data": {},
+    "captions": true
+}

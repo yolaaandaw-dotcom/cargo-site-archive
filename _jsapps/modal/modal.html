@@ -1,0 +1,420 @@
+
+	<div class="modal-overlay" style="display:block;"></div>
+
+	<div class="confirm-box <%= modal.modal_type+'-text' %>">
+		<div class="">	
+			
+			<div data-modal-message>
+				<% if(modal.modal_type == 'dialog' || modal.modal_type == 'prompt') { %>
+				<textarea data-modal-textarea placeholder="<%= (modal.message) ? modal.message : '' %>"><%= (modal.textarea_value) ? modal.textarea_value : '' %></textarea>
+				<% } else { %>
+				<div><%= modal.message %></div>
+				<% } %>
+			</div>
+			
+			<% if(modal.modal_type != 'dialog' && modal.modal_type != 'block') { %>
+			<div data-button-row>
+
+				<% if(modal.modal_type != 'alert') { %>
+				<div data-deny>
+					<% if(modal.modal_type == 'save') { %>
+						Discard
+					<% } else { %>
+						Cancel
+					<% } %>               
+				</div>
+				<% } %>
+
+				<div data-confirm class="<% if(modal.modal_type != 'save') { %>bg-blue<% } else { %>bg-green<% } %>">
+
+					<div class="confirm-button">
+						<% if(modal.modal_type == 'save') { %>
+							Save
+						<% } else { %>
+							OK
+						<% } %>
+					</div>
+
+					<% if(modal.modal_type == 'save') { %>
+					<div class="col col-square">
+						<div data-save-text class="col col-square tar pad-small pad-left-reset color-white type-size-small no-select type-regular" style="min-width: 10rem; line-height: 0rem;">
+						  <span style="position: absolute;right: 1.5rem;bottom: 1.85rem; opacity: .75;">Cmd+S</span>
+						</div>
+						<!-- <div class="icon-square">
+							<div class="align-middle position-cover" data-save-text="">
+								<svg style="height: 18px; width: 18px;" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 16 16" enable-background="new 0 0 16 16" height="100%" width="100%" xml:space="preserve"><polygon points="5.0567665,14.267292 0,9.2105255 1.4678155,7.7427101 5.0567665,11.3316612 14.5321846,1.856243 16,3.3240585 "></polygon></svg>
+							</div>
+						</div> -->
+					</div>
+					<% } %>
+
+				</div>
+
+				<div data-progress class="progress-bar col col-full bg-white" style="display:none;">
+					<div class="progress-percentage"></div>					
+					<div class="progress-indicator bg-blue col" style="width: 0%;"></div>
+				</div>
+
+			</div>
+				</div>
+			</div>
+			<% } %>
+
+
+		</div>
+	</div>
+
+<style>
+
+/*
+ * Confirm Modal
+ */
+#confirm_modal {
+	position: absolute;
+	-moz-osx-font-smoothing: grayscale;
+	-webkit-font-smoothing: antialiased;
+	-webkit-text-size-adjust: none;
+}
+
+#confirm_modal.signup .confirm-box{
+	box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.18);
+	width: 400px;
+	height: 530px;
+	margin-top: -200px;
+}
+
+#confirm_modal .confirm-box {
+	-webkit-box-orient: horizontal; 
+	-webkit-box-direction: normal; 
+	-webkit-flex-direction: row; 
+	-ms-flex-direction: row; 
+	flex-direction: row
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: -ms-flexbox;
+	display: flex;
+	align-items: stretch;
+	background: #fff;
+	margin: -87px 0 0 -170px;
+	position: fixed;
+	top: 40%;
+	left: 50%;
+	min-height: 174px;
+	height: auto;
+	width: 340px;
+	z-index: 2147483638;
+	font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,"Open Sans","Helvetica Neue",sans-serif;
+	line-height: 1.7;
+	letter-spacing: 0;
+	word-spacing: 0;
+	font-weight: normal;
+	text-decoration: none;
+	font-size: 14px;
+	color: #222222;
+	box-sizing: border-box;
+	-moz-box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.1);
+	-webkit-box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.1);
+	box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.1);
+}
+
+#confirm_modal .confirm-box > div {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical; 
+  -webkit-box-direction: normal; 
+  -webkit-flex-direction: column; 
+  -ms-flex-direction: column; 
+  flex-direction: column;
+  width: 100%;
+}
+
+#confirm_modal div {
+	box-sizing: border-box;
+}
+
+#confirm_modal .modal-overlay {
+	position: fixed;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	display: none;
+	background: rgba(0,0,0,.1);
+	z-index: 2147483638;
+}
+
+#confirm_modal.signup .modal-overlay {
+	background: rgba(0,0,0,.6);
+}
+
+[data-modal-message] {
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: -ms-flexbox;
+	display: flex;
+	font-size: 17px;
+	text-align: center;
+	width: 100%;
+	font-weight: 700;
+	line-height: 1.3em;
+	padding: 26px 30px 22px;
+	width: 100%;
+	-webkit-box-flex: 1;
+  -webkit-flex: 1;
+	  -ms-flex: 1;
+		  flex: 1;
+	word-break: break-word;
+	-webkit-box-pack: center;
+  -webkit-justify-content: center;
+	  -ms-flex-pack: center;
+		  justify-content: center;
+	-webkit-box-orient: vertical; 
+	-webkit-box-direction: normal; 
+	-webkit-flex-direction: column; 
+	-ms-flex-direction: column; 
+	flex-direction: column;
+}
+
+#confirm_modal .confirm-box.dialog-text,
+#confirm_modal .confirm-box.prompt-text {
+	height: auto;
+	min-height: initial;
+}
+
+#confirm_modal .confirm-box.dialog-text [data-modal-message] {
+	padding: 15px;
+}
+
+#confirm_modal .confirm-box.prompt-text [data-modal-message] {
+	padding: 0;
+}
+
+
+[data-modal-message] em {
+	font-weight: normal;
+	text-decoration: none;
+	font-style: normal;
+}
+
+[data-modal-textarea] {
+	-webkit-appearance: none;
+	background-color: white;
+	border: none;
+	-webkit-user-select: text;
+	flex-direction: column;
+	resize: none;
+	cursor: auto;
+	white-space: pre-wrap;
+	word-break: break-all;
+	padding: 10px;
+	font-size: 17px;
+	color: #333333;
+	min-height: 70px;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+	width: 325px;
+}
+
+#confirm_modal .confirm-box.prompt-text [data-modal-textarea] {
+	height: 45px;
+	min-height: initial;
+	line-height: 27px;
+	padding: 10px 14px;
+}
+
+[data-button-row] {
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-flex-wrap: wrap;
+	-ms-flex-wrap: wrap;
+	flex-wrap: wrap;
+	min-height: 45px;
+	width: 100%;	
+	font-size: 17px;
+	height: auto; 
+	line-height: 1.7;
+}
+
+[data-confirm], [data-deny] {
+	color: #fff;
+	fill: #fff;
+	font-weight: 700;
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-flex-wrap: wrap;
+	-ms-flex-wrap: wrap;
+	flex-wrap: wrap;
+	min-height: 45px;
+	-webkit-box-flex: 1;
+	-webkit-flex: 1 0 66.3%;
+	-ms-flex: 1 0 66.3%;
+	flex: 1 0 66.3%;
+	position: relative;
+	cursor: pointer;
+}
+
+[data-deny]:active {
+	background: #666;
+}
+
+[data-deny] {
+	/*margin-right: 1px;*/
+	font-weight: normal;
+	 -webkit-box-flex: 1;
+	-webkit-flex: 1 0 33.3%;
+	-ms-flex: 1 0 33.3%;
+	flex: 1 0 33.3%;
+	background: #787878;
+	background: rgba(0,0,0,.53);
+	color: rgba(255,255,255,.8);
+	padding: 7.5px 15px;
+}
+
+.confirm-button {
+	min-height: 45px;
+	-webkit-box-flex: 1;
+	-webkit-flex: 1;
+	-ms-flex: 1;
+	flex: 1;
+	position: relative;	
+	padding: 7.5px 15px;
+}
+
+#confirm_modal .bg-green {
+	background: #0FCE83;
+}
+
+#confirm_modal .bg-gray-medium-dark {
+	background: #aaaaaa;
+}
+
+#confirm_modal .bg-gray-medium-dark:hover {
+	background: #b5b5b5;
+}
+
+#confirm_modal .bg-gray-medium-dark:active {
+	background-color: #a6a6a6;
+}
+
+#confirm_modal .bg-blue {
+	background: #698FFF;
+}
+
+#confirm_modal .bg-blue:hover {
+	/*background: rgb(105, 143, 255, .85);*/
+}
+
+#confirm_modal .bg-blue:active {
+	background: #5981f7;
+}
+
+#confirm_modal [data-progress] {
+    border-top: 1px solid #f2f2f2;
+}
+
+#confirm_modal [data-progress] .progress-indicator {
+	height: 44px;
+}
+
+#confirm_modal [data-progress] .progress-indicator.waiting:after {
+	display: none;
+}
+
+#confirm_modal [data-progress] .progress-percentage {
+	line-height: 44px;
+	font-size: 14px;
+}
+
+#confirm_modal [data-progress] .loading_animation {
+	position: absolute;
+	top: 12px;
+	left: 15px;
+}
+
+#confirm_modal [data-progress] .progress-indicator:after {
+	font-size: 14px;
+	line-height: 28px;
+}
+
+html:not(.admin-wrapper) #confirm_modal .row {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-wrap: wrap;
+      -ms-flex-wrap: wrap;
+          flex-wrap: wrap;
+  min-height: 4rem;
+  width: 100%;
+}
+
+html:not(.admin-wrapper) #confirm_modal .col {
+  min-height: 4rem;
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  position: relative;
+}
+
+html:not(.admin-wrapper) #confirm_modal .col-full {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1 0 100%;
+      -ms-flex: 1 0 100%;
+          flex: 1 0 100%;
+}
+
+
+html:not(.admin-wrapper) [data-progress].progress-bar:after {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	/*border: 1px solid rgba(0,0,0,0.2);*/
+	border-radius: 2px;
+}
+
+html:not(.admin-wrapper) [data-progress].progress-bar {
+	/*border-radius: 2px;*/
+	/*margin-top: 1px;*/
+	/*overflow: hidden;*/
+}
+
+
+html:not(.admin-wrapper) [data-progress] .progress-indicator{
+	transition: .4s ease-out;
+}
+
+html:not(.admin-wrapper) [data-progress] .progress-indicator:after {
+	position: absolute;
+	top: 0; left: 0; right: 0; bottom: 0;
+	pointer-events: none;
+	content: 'Loading';
+	padding: .75rem 1.5rem;
+	z-index: 9;
+}
+
+
+html:not(.admin-wrapper) [data-progress] .progress-percentage {
+	color: black;
+	position: absolute;
+	top: 0;
+	left: auto;
+	right: 1.5rem;
+	bottom: 0;
+	text-align: center;
+	line-height: 4rem;
+	z-index: 1;
+	opacity: 0.;
+}
+
+</style>

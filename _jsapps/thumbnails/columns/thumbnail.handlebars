@@ -1,0 +1,64 @@
+{{#columns}}
+	{{var "active_crop" ../settings.thumb_crop}}
+	<div class="column" grid-col="x{{../settings.column_size}}">
+		{{#each this}}
+			{{var "crop" thumb_meta.thumbnail_crop}}
+			{{var "image_model" thumb_meta.thumbnail_crop.imageModel}}		
+			<div class="thumbnail{{#if_all title ../../settings.show_title}} has_title{{/if_all}}" data-id="{{id}}"  thumbnails-pad="">
+				<a href="{{url}}" rel="history" class="image-link">
+					{{#if image_model}}
+						{{#if ../../settings.crop}}
+							<div class="thumb_image" aspect-ratio="{{../../../settings.thumb_crop}}" data-elementresizer-no-resize="" data-elementresizer-no-centering="">
+								<img data-mid="{{image_model.id}}" width="{{image_model.width}}" height="{{image_model.height}}"
+
+									{{#if_equal ../../../settings.thumb_crop crop.stored.crop_ratio }}
+
+										{{#if crop.cropManuallySet}}
+											style="width: {{crop.percentWidth}}%; height: auto; margin-left: {{crop.marginLeft}}%; margin-top: {{crop.marginTop}}%;"
+										{{else}}
+											style="{{fill_default_thumbnail_crop crop active_crop}}"							
+										{{/if}}
+									{{else}}
+										style="{{fill_default_thumbnail_crop crop active_crop}}"							
+									{{/if_equal}}
+								>
+							</div>				
+						{{else}}
+							<div class="thumb_image" style="height: 0; padding-bottom: {{crop.stored.ratio}}%" data-elementresizer-no-resize="" data-elementresizer-no-centering="">
+								<img data-mid="{{image_model.id}}" width="{{image_model.width}}" height="{{image_model.height}}" style="width: 100%; height: auto;">
+							</div>
+						{{/if}}
+					{{else}}
+						{{#if ../../settings.crop}}
+							<div class="thumb_image default_image" aspect-ratio="{{../../../settings.thumb_crop}}">
+								<svg height="200" width="200" viewBox="0 0 200 200" preserveAspectRatio="none">
+								  <line vector-effect="non-scaling-stroke" x1="200" y1="0" x2="0" y2="200" stroke="#cccccc" stroke-width="1" />
+								</svg>
+							</div>
+						{{else}}
+							<div class="thumb_image default_image" aspect-ratio="1x1" >
+								<svg height="200" width="200" viewBox="0 0 200 200" preserveAspectRatio="none">
+								  <line vector-effect="non-scaling-stroke" x1="200" y1="0" x2="0" y2="200" stroke="#cccccc" stroke-width="1" />
+								</svg>
+							</div>
+						{{/if}}			
+					{{/if}}
+					{{#if_all title ../../settings.show_title}}
+						<div class="title"><span>{{title_no_html}}</span></div>
+					{{/if_all}}
+
+					{{#if_all content_no_html ../../settings.show_excerpt}}
+						<div class="excerpt">
+						{{content_no_html}}
+						</div>
+					{{/if_all}}					
+				</a>
+
+			{{#if ../../settings.show_tags}}
+				<div class="tags">{{{tags_with_links}}}</div>
+			{{/if}}	
+
+			</div>
+		{{/each}}
+	</div>
+{{/columns}}
